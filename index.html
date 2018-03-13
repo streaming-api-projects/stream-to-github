@@ -4,7 +4,8 @@ title: Stream to Github
 ---
 
 Feedly Token: <input type="text" name="feedlytoken" id="feedlytoken" value="">
-
+<br />
+<input type="button" name="run" value="run" onclick="runit();">
 <script>
 
 
@@ -15,7 +16,8 @@ function processResults(results)
 
 	}
 
-(function() {
+function runit()
+	{
   var eventSource = null;
   var stocks = [];
   var checked = 1;
@@ -29,7 +31,8 @@ function processResults(results)
 
 		var $feedlyToken = document.getElementById("feedlytoken").value;
 		console.log("feedly token: " + $feedlyToken);
-		var $feedlyURL = 'http://cloud.feedly.com/v3/streams/contents?streamId=' + $feedlyStreamId + '&X-Sd-Token=' + feedlyToken + '&count=900'
+
+		var $feedlyURL = 'http://cloud.feedly.com/v3/streams/contents?streamId=' + $feedlyStreamId + '&X-Sd-Token=' + $feedlyToken + '&count=900'
 		console.log("feedly url: " + $feedlyURL);
 
     // create the StreamdataEventSource Object
@@ -80,6 +83,7 @@ function processResults(results)
   };
 
   connect();
-})();
+
+	}
 
 </script>
