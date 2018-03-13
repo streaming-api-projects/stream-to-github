@@ -1,0 +1,85 @@
+---
+layout: default
+title: Stream to Github
+---
+
+Feedly Token: <input type="text" name="feedlytoken" id="feedlytoken" value="">
+
+<script>
+
+
+function processResults(results)
+	{
+
+	console.log(results);
+
+	}
+
+(function() {
+  var eventSource = null;
+  var stocks = [];
+  var checked = 1;
+
+  function connect() {
+
+    // REPLACE WITH YOUR OWN TOKEN HERE
+    var appToken = "YzEzNDJhYzMtNWRmYS00MGEwLWFhYzAtMzgzOTNhMWZjYTA1";
+
+		var $feedlyStreamId = '7eec9401-5c51-470c-930b-2cb544bb4442';
+
+		var $feedlyToken = document.getElementById("feedlytoken").value;
+		console.log("feedly token: " + $feedlyToken);
+		var $feedlyURL = 'http://cloud.feedly.com/v3/streams/contents?streamId=' + $feedlyStreamId + '&X-Sd-Token=' + feedlyToken + '&count=900'
+		console.log("feedly url: " + $feedlyURL);
+
+    // create the StreamdataEventSource Object
+    eventSource = streamdataio.createEventSource($feedlyURL, appToken);
+
+    eventSource
+     .onOpen(function() {
+       console.log("streamdata Event Source connected.")
+     })
+     .onData(function(data) {
+
+       results = sortByKey(data, 'calldatetime');
+	   processResults(results);
+
+	   document.getElementById('checked').innerHTML = "Updated " + checked + ' time!';
+
+     })
+     .onPatch(function(patch) {
+
+       // use json patch library to apply the patch (patch)
+       // to the original snapshot (stocks)
+       console.log("udate!");
+       	results = patch.events;
+		if(results)
+			{
+			results = sortByKey(results, 'calldatetime');
+			processResults(results);
+			}
+		checked++;
+		document.getElementById('checked').innerHTML = "Updated " + checked + ' times!';
+
+     })
+     .onError(function(error) {
+       // displays the error message
+       console.log(error.getMessage());
+     });
+
+    // open the data stream to the REST service through streamdata.io proxy
+    eventSource.open();
+
+  };
+
+  function disconnect() {
+    if (eventSource) {
+      eventSource.close();
+      eventSource = null;
+    }
+  };
+
+  connect();
+})();
+
+</script>
