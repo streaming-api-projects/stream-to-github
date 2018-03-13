@@ -2,8 +2,9 @@
 layout: default
 title: Stream to Github
 ---
-
-Feedly Token: <input type="text" name="feedlytoken" id="feedlytoken" value="">
+Streamdata Key: <input type="text" name="streamdataKey" id="feedlytoken" value="">
+<br />
+News API Key: <input type="text" name="newsAPIKey" id="feedlytoken" value="">
 <br />
 <input type="button" name="run" value="run" onclick="runit();">
 <script>
@@ -24,19 +25,17 @@ function runit()
 
   function connect() {
 
-    // REPLACE WITH YOUR OWN TOKEN HERE
-    var appToken = "YzEzNDJhYzMtNWRmYS00MGEwLWFhYzAtMzgzOTNhMWZjYTA1";
+		var $streamdataKey = document.getElementById("streamdataKey").value;
+		console.log("streamdata key: " + $streamdataKey);
 
-		var $feedlyStreamId = '7eec9401-5c51-470c-930b-2cb544bb4442';
+		var $newsAPIKey = document.getElementById("newsAPIKey").value;
+		console.log("newsapi key: " + $newsAPIKey);
 
-		var $feedlyToken = document.getElementById("feedlytoken").value;
-		console.log("feedly token: " + $feedlyToken);
-
-		var $feedlyURL = 'http://cloud.feedly.com/v3/streams/contents?streamId=' + $feedlyStreamId + '&X-Sd-Token=' + $feedlyToken + '&count=900'
-		console.log("feedly url: " + $feedlyURL);
+		var $api_url = 'http://newsapi.org/v2/top-headlines';
+		console.log("newsapi url: " + $api_url);
 
     // create the StreamdataEventSource Object
-    eventSource = streamdataio.createEventSource($feedlyURL, appToken);
+    eventSource = streamdataio.createEventSource($api_url, $streamdataKey);
 
     eventSource
      .onOpen(function() {
