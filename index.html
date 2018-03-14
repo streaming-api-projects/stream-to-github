@@ -52,13 +52,15 @@ function runit()
   var checked = 1;
 
   function connect() {
-		console.log("running!");
+
 		// Grab the streamdata key
 		var $streamdataKey = document.getElementById("streamdataKey").value;
 		console.log($streamdataKey);
+
 		// grab the newsAPI key
 		var $newsAPIKey = document.getElementById("newsAPIKey").value;
 		console.log($newsAPIKey);
+
 		// Set the URL
 		var $api_url = 'http://newsapi.org/v2/top-headlines?country=us&apiKey=' + $newsAPIKey;
 		console.log($api_url);
