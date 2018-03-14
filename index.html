@@ -43,10 +43,7 @@ function runit()
      })
      .onData(function(data) {
 
-       results = sortByKey(data, 'calldatetime');
-	   processResults(results);
-
-	   document.getElementById('checked').innerHTML = "Updated " + checked + ' time!';
+	   processResults(data);
 
      })
      .onPatch(function(patch) {
@@ -55,14 +52,7 @@ function runit()
        // to the original snapshot (stocks)
        console.log("udate!");
        	results = patch.events;
-		if(results)
-			{
-			results = sortByKey(results, 'calldatetime');
-			processResults(results);
-			}
-		checked++;
-		document.getElementById('checked').innerHTML = "Updated " + checked + ' times!';
-
+				processResults(results);
      })
      .onError(function(error) {
        // displays the error message
