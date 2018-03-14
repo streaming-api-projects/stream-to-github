@@ -24,7 +24,7 @@ function processResults(results)
 
 		$token = 'Authorization: token ' + $github_token;
 
-		$headers = [token,'User-Agent: Streaam-To-github'];
+		$headers = [$token,'User-Agent: Streaam-To-github'];
 
 		$githuburl = 'https://api.github.com/repos/' + $github_owner + '/' + $github_repo + '/contents/' + $file_name;
 		var response = $.ajax({
@@ -45,50 +45,49 @@ function processResults(results)
 function runit()
 	{
 
-		var eventSource = null;
-	  var stocks = [];
-	  var checked = 1;
+  var eventSource = null;
+  var stocks = [];
+  var checked = 1;
 
-	  function connect() {
+  function connect() {
 
-			// Grab the streamdata key
-			var $streamdataKey = document.getElementById("streamdataKey").value;
-			console.log($streamdataKey);
+		// Grab the streamdata key
+		var $streamdataKey = document.getElementById("streamdataKey").value;
 
-	    // create the StreamdataEventSource Object
-	    eventSource = streamdataio.createEventSource("http://api.511.org/Traffic/Events", $streamdataKey);
+		// Set the URL
+		var $api_url = 'http://api.511.org/Traffic/Events';
 
-	    eventSource
-	     .onOpen(function() {
-	       console.log("streamdata Event Source connected.")
-	     })
-	     .onData(function(data) {
+    // create the StreamdataEventSource Object
+    eventSource = streamdataio.createEventSource($api_url, $streamdataKey);
+    eventSource
+     .onOpen(function() {
+       console.log("streamdata Event Source connected.")
+     })
+     .onData(function(data) {
+			 	// process results
+	   		processResults(data);
+     })
+     .onPatch(function(patch) {
+       	results = patch.events;
+				// process results
+				processResults(results);
+     })
+     .onError(function(error) {
+       // displays the error message
+       console.log(error.getMessage());
+     });
+    // open the data stream to the REST service through streamdata.io proxy
+    eventSource.open();
+  };
 
-		   processResults(data);
+  function disconnect() {
+    if (eventSource) {
+      eventSource.close();
+      eventSource = null;
+    }
+  };
 
-	     })
-	     .onPatch(function(patch) {
-	       	results = patch.events;
-					processResults(results);
-	     })
-	     .onError(function(error) {
-	       // displays the error message
-	       console.log(error.getMessage());
-	     });
-
-	    // open the data stream to the REST service through streamdata.io proxy
-	    eventSource.open();
-
-	  };
-
-	  function disconnect() {
-	    if (eventSource) {
-	      eventSource.close();
-	      eventSource = null;
-	    }
-	  };
-
-	  connect();
+  connect();
 
 	}
 
