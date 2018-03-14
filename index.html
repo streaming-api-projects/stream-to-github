@@ -45,49 +45,64 @@ function processResults(results)
 function runit()
 	{
 
-  var eventSource = null;
-  var stocks = [];
-  var checked = 1;
+		var eventSource = null;
+	  var stocks = [];
+	  var checked = 1;
 
-  function connect() {
+	  function connect() {
 
-		// Grab the streamdata key
-		var $streamdataKey = document.getElementById("streamdataKey").value;
+			// Grab the streamdata key
+			var $streamdataKey = document.getElementById("streamdataKey").value;
+			console.log($streamdataKey);
 
-		// Set the URL
-		var $api_url = 'http://api.511.org/Traffic/Events';
+	    // create the StreamdataEventSource Object
+	    eventSource = streamdataio.createEventSource("http://api.511.org/Traffic/Events", $streamdataKey);
 
-    // create the StreamdataEventSource Object
-    eventSource = streamdataio.createEventSource($api_url, $streamdataKey);
-    eventSource
-     .onOpen(function() {
-       console.log("streamdata Event Source connected.")
-     })
-     .onData(function(data) {
-			 	// process results
-	   		processResults(data);
-     })
-     .onPatch(function(patch) {
-       	results = patch.events;
-				// process results
+	    eventSource
+	     .onOpen(function() {
+	       console.log("streamdata Event Source connected.")
+	     })
+	     .onData(function(data) {
+
+	       results = sortByKey(data.events, 'updated');
+		   processResults(results);
+
+		   document.getElementById('checked').innerHTML = "Updated " + checked + ' time!';
+
+	     })
+	     .onPatch(function(patch) {
+
+	       // use json patch library to apply the patch (patch)
+	       // to the original snapshot (stocks)
+	       console.log("udate!");
+	       	results = patch.events;
+			if(results)
+				{
+				results = sortByKey(results, 'updated');
 				processResults(results);
-     })
-     .onError(function(error) {
-       // displays the error message
-       console.log(error.getMessage());
-     });
-    // open the data stream to the REST service through streamdata.io proxy
-    eventSource.open();
-  };
+				}
+			checked++;
+			document.getElementById('checked').innerHTML = "Updated " + checked + ' times!';
 
-  function disconnect() {
-    if (eventSource) {
-      eventSource.close();
-      eventSource = null;
-    }
-  };
+	     })
+	     .onError(function(error) {
+	       // displays the error message
+	       console.log(error.getMessage());
+	     });
 
-  connect();
+	    // open the data stream to the REST service through streamdata.io proxy
+	    eventSource.open();
+
+	  };
+
+	  function disconnect() {
+	    if (eventSource) {
+	      eventSource.close();
+	      eventSource = null;
+	    }
+	  };
+
+	  connect();
 
 	}
 
