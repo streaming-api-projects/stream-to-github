@@ -65,6 +65,7 @@ function runit()
 
     // create the StreamdataEventSource Object
     eventSource = streamdataio.createEventSource($api_url, $streamdataKey);
+
     eventSource
      .onOpen(function() {
        console.log("streamdata Event Source connected.")
