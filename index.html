@@ -27,7 +27,20 @@ function processResults(results)
 
 		$headers = [token,'User-Agent: Streaam-To-github'];
 
-		
+		$githuburl = 'https://api.github.com/repos/' + $github_owner + '/' + $github_repo + '/contents/' + $file_name;
+		var response = $.ajax({
+		     url: $githuburl,
+		     method: "get",
+		     headers: $headers,
+		     success:function(response){
+		          console.log("success!");
+							console.log(response);
+		      },
+		      error: function(XMLHttpRequest, textStatus, errorThrown) {
+		          console.log("Status: " + textStatus);
+							console.log("Error: " + errorThrown);
+		      }
+		  });
 	}
 
 function runit()
@@ -41,19 +54,12 @@ function runit()
 
 		// Grab the streamdata key
 		var $streamdataKey = document.getElementById("streamdataKey").value;
-		console.log($streamdataKey);
-
-		// grab the newsAPI key
-		var $newsAPIKey = document.getElementById("newsAPIKey").value;
-		console.log($newsAPIKey);
 
 		// Set the URL
-		var $api_url = 'http://newsapi.org/v2/top-headlines?country=us&apiKey=' + $newsAPIKey;
-		console.log($api_url);
+		var $api_url = 'http://api.511.org/Traffic/Events';
 
     // create the StreamdataEventSource Object
     eventSource = streamdataio.createEventSource($api_url, $streamdataKey);
-
     eventSource
      .onOpen(function() {
        console.log("streamdata Event Source connected.")
