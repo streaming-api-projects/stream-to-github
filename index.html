@@ -62,6 +62,7 @@ function runit()
 		// Set the URL
 		var $api_url = 'http://newsapi.org/v2/top-headlines';
 		console.log($api_url);
+		
     // create the StreamdataEventSource Object
     eventSource = streamdataio.createEventSource($api_url, $streamdataKey);
     eventSource
