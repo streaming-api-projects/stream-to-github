@@ -3,8 +3,9 @@ layout: default
 title: Stream to Github
 ---
 
-<h1>Stream to Github - 1</h1>
-<p>this will stream news from the NewsAPI using Streamdata.io, then write results to the Github repository this project runs in.</p>
+<h1>Stream to Github</h1>
+<p>This will stream news from the NewsAPI using Streamdata.io, then write results to the Github repository this project runs in.</p>
+<p>It takes three sets of keys to be able to pull, proxy, and write to the repository.</p>
 Streamdata Key: <input type="text" name="streamdataKey" id="streamdataKey" value=""><br />
 News API Key: <input type="text" name="newsAPIKey" id="newsAPIKey" value=""><br />
 Github Token: <input type="text" name="githubtoken" id="githubtoken" value=""><br />
@@ -12,36 +13,47 @@ Github Token: <input type="text" name="githubtoken" id="githubtoken" value=""><b
 
 <script>
 
-function processResults(results)
+function processResults($results)
 	{
 
-		// Grab the github oauth token
-		var $github_token = document.getElementById("githubtoken").value
+	$result = JSON.stringify($results);
 
-		$github_owner = 'streaming-api-projects';
-		$github_repo = 'stream-to-github';
+	// Grab the github oauth token
+	var $github_token = document.getElementById("githubtoken").value
 
-		$file_name = 'news.json';
+	// Set the user/org and the repo
+	$github_owner = 'streaming-api-projects';
+	$github_repo = 'stream-to-github';
+	$file_name = 'news.json';
 
-		$token = 'Authorization: token ' + $github_token;
+	$token = 'Authorization: token ' + $github_token;
+	$headers = [$token,'User-Agent: Streaam-To-github'];
 
-		$headers = [$token,'User-Agent: Streaam-To-github'];
+	$githuburl = 'https://api.github.com/repos/' + $github_owner + '/' + $github_repo + '/contents/' + $file_name;
 
-		$githuburl = 'https://api.github.com/repos/' + $github_owner + '/' + $github_repo + '/contents/' + $file_name;
-		console.log($githuburl);
-		var response = $.ajax({
-		     url: $githuburl,
-		     method: "get",
-		     headers: $headers,
-		     success:function(response){
-		          console.log("success!");
-							console.log(response);
-		      },
-		      error: function(XMLHttpRequest, textStatus, errorThrown) {
-		          console.log("Status: " + textStatus);
-							console.log("Error: " + errorThrown);
-		      }
-		  });
+	// Get the file, so we have the SHA
+	var xmlHttp = new XMLHttpRequest();
+	xmlHttp.open( "GET", $githuburl, false ); // false for synchronous request
+	xmlHttp.setRequestHeader("Authorization",'token ' + $github_token);
+	xmlHttp.send( null );
+	$file_response = JSON.parse(xmlHttp.responseText);
+
+	// write the file to Github repo using github API
+	$body = {};
+	$body['message'] = "Write File";
+	$body['content'] = btoa(unescape(encodeURIComponent($result)));
+	$body['sha'] = $file_response['sha'];
+	$body_json = JSON.stringify($body);
+
+	var xmlHttp = new XMLHttpRequest();
+	xmlHttp.open("PUT", $githuburl, false ); // false for synchronous request
+	xmlHttp.setRequestHeader("Authorization",'token ' + $github_token);
+	xmlHttp.setRequestHeader("Content-Type", "application/json");
+	xmlHttp.send($body_json);
+
+	console.log(xmlHttp.responseText);
+	//$file_response = JSON.parse(xmlHttp.responseText);
+
 	}
 
 function runit()
