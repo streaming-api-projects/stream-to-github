@@ -64,26 +64,12 @@ function runit()
 	     })
 	     .onData(function(data) {
 
-	       results = sortByKey(data.events, 'updated');
-		   processResults(results);
-
-		   document.getElementById('checked').innerHTML = "Updated " + checked + ' time!';
+		   processResults(data);
 
 	     })
 	     .onPatch(function(patch) {
-
-	       // use json patch library to apply the patch (patch)
-	       // to the original snapshot (stocks)
-	       console.log("udate!");
 	       	results = patch.events;
-			if(results)
-				{
-				results = sortByKey(results, 'updated');
-				processResults(results);
-				}
-			checked++;
-			document.getElementById('checked').innerHTML = "Updated " + checked + ' times!';
-
+					processResults(results);
 	     })
 	     .onError(function(error) {
 	       // displays the error message
