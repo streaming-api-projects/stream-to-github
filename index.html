@@ -3,6 +3,13 @@ layout: default
 title: Stream to Github
 ---
 
+<h1>Stream to Github</h1>
+<p>this will stream news from the NewsAPI using Streamdata.io, then write results to the Github repository this project runs in.</p>
+Streamdata Key: <input type="text" name="streamdataKey" id="streamdataKey" value=""><br />
+News API Key: <input type="text" name="newsAPIKey" id="newsAPIKey" value=""><br />
+Github Token: <input type="text" name="githubtoken" id="githubtoken" value=""><br />
+<input type="button" name="run" value="run" onclick="runit();">
+
 <script>
 
 function processResults(results)
@@ -89,10 +96,3 @@ function runit()
 	}
 
 </script>
-
-<h1>Stream to Github</h1>
-<p>this will stream news from the NewsAPI using Streamdata.io, then write results to the Github repository this project runs in.</p>
-Streamdata Key: <input type="text" name="streamdataKey" id="streamdataKey" value=""><br />
-News API Key: <input type="text" name="newsAPIKey" id="newsAPIKey" value=""><br />
-Github Token: <input type="text" name="githubtoken" id="githubtoken" value=""><br />
-<input type="button" name="run" value="run" onclick="runit();">
