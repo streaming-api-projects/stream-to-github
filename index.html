@@ -28,6 +28,7 @@ function processResults(results)
 		$headers = [token,'User-Agent: Streaam-To-github'];
 
 		$githuburl = 'https://api.github.com/repos/' + $github_owner + '/' + $github_repo + '/contents/' + $file_name;
+		console.log($githuburl);
 		var response = $.ajax({
 		     url: $githuburl,
 		     method: "get",
@@ -54,13 +55,13 @@ function runit()
 
 		// Grab the streamdata key
 		var $streamdataKey = document.getElementById("streamdataKey").value;
-
+		console.log($streamdataKey);
 		// grab the newsAPI key
 		var $newsAPIKey = document.getElementById("newsAPIKey").value;
-
+		console.log($newsAPIKey);
 		// Set the URL
 		var $api_url = 'http://newsapi.org/v2/top-headlines';
-
+		console.log($api_url);
     // create the StreamdataEventSource Object
     eventSource = streamdataio.createEventSource($api_url, $streamdataKey);
     eventSource
