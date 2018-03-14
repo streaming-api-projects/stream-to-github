@@ -3,9 +3,14 @@ layout: default
 title: Stream to Github
 ---
 
+<h1>Stream to Github</h1>
+Streamdata Key: <input type="text" name="streamdataKey" id="streamdataKey" value="">
+<br />
+News API Key: <input type="text" name="newsAPIKey" id="newsAPIKey" value="">
+<br />
+<input type="button" name="run" value="run" onclick="runit();">
 
 <script>
-
 
 function processResults(results)
 	{
@@ -14,7 +19,8 @@ function processResults(results)
 
 	}
 
-(function() {
+function runit()
+	{
 
   var eventSource = null;
   var stocks = [];
@@ -22,12 +28,10 @@ function processResults(results)
 
   function connect() {
 
-		//var $streamdataKey = document.getElementById("streamdataKey").value;
-		$streamdataKey = getUrlVar('streamdatakey');
+		var $streamdataKey = document.getElementById("streamdataKey").value;
 		console.log("streamdata key: " + $streamdataKey);
 
-		//var $newsAPIKey = document.getElementById("newsAPIKey").value;
-		$newsAPIKey = getUrlVar('newsapikey');
+		var $newsAPIKey = document.getElementById("newsAPIKey").value;
 		console.log("newsapi key: " + $newsAPIKey);
 
 		var $api_url = 'http://newsapi.org/v2/top-headlines';
@@ -72,6 +76,6 @@ function processResults(results)
 
   connect();
 
-})();
+	}
 
 </script>
