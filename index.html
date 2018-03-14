@@ -27,21 +27,7 @@ function processResults(results)
 
 		$headers = [token,'User-Agent: Streaam-To-github'];
 
-		$githuburl = 'https://api.github.com/repos/' + $github_owner + '/' + $github_repo + '/contents/' + $file_name;
-		console.log($githuburl);
-		var response = $.ajax({
-		     url: $githuburl,
-		     method: "get",
-		     headers: $headers,
-		     success:function(response){
-		          console.log("success!");
-							console.log(response);
-		      },
-		      error: function(XMLHttpRequest, textStatus, errorThrown) {
-		          console.log("Status: " + textStatus);
-							console.log("Error: " + errorThrown);
-		      }
-		  });
+		
 	}
 
 function runit()
