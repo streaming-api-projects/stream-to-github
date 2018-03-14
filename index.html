@@ -17,18 +17,20 @@ function processResults(results)
 
 	}
 
-function runit()
-	{
+(function() {
+
   var eventSource = null;
   var stocks = [];
   var checked = 1;
 
   function connect() {
 
-		var $streamdataKey = document.getElementById("streamdataKey").value;
+		//var $streamdataKey = document.getElementById("streamdataKey").value;
+		$newsAPIKey = getUrlVar('streamdatakey');
 		console.log("streamdata key: " + $streamdataKey);
 
-		var $newsAPIKey = document.getElementById("newsAPIKey").value;
+		//var $newsAPIKey = document.getElementById("newsAPIKey").value;
+		$newsAPIKey = getUrlVar('newsapikey');
 		console.log("newsapi key: " + $newsAPIKey);
 
 		var $api_url = 'http://newsapi.org/v2/top-headlines';
@@ -73,6 +75,6 @@ function runit()
 
   connect();
 
-	}
+})();
 
 </script>
