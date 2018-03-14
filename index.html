@@ -4,10 +4,10 @@ title: Stream to Github
 ---
 
 <h1>Stream to Github</h1>
-Streamdata Key: <input type="text" name="streamdataKey" id="streamdataKey" value="">
-<br />
-News API Key: <input type="text" name="newsAPIKey" id="newsAPIKey" value="">
-<br />
+<p>this will stream news from the NewsAPI using Streamdata.io, then write results to the Github repository this project runs in.</p>
+Streamdata Key: <input type="text" name="streamdataKey" id="streamdataKey" value=""><br />
+News API Key: <input type="text" name="newsAPIKey" id="newsAPIKey" value=""><br />
+Github Token: <input type="text" name="githubtoken" id="githubtoken" value=""><br />
 <input type="button" name="run" value="run" onclick="runit();">
 
 <script>
@@ -15,8 +15,29 @@ News API Key: <input type="text" name="newsAPIKey" id="newsAPIKey" value="">
 function processResults(results)
 	{
 
-	console.log(results);
+		// Grab the github oauth token
+		var $github_token = document.getElementById("githubtoken").value
 
+		$github_owner = 'streaming-api-projects';
+		$github_repo = 'stream-to-github';
+
+		$file_name = 'news.json';
+
+		$githuburl = 'https://api.github.com/repos/' + $github_owner + '/' + $github_repo + '/contents/' + $file_name;
+		var response = $.ajax({
+		     url: $githuburl,
+		     method: "get",
+		     headers: {
+					 'Authorization: token ' + $github_token,
+	 				 'User-Agent: Streaam-To-github'
+		     },
+		     success:function(response){
+		          alert("success");
+		      },
+		      error: function(XMLHttpRequest, textStatus, errorThrown) {
+		          alert("Status: " + textStatus); alert("Error: " + errorThrown);
+		      }
+		  });
 	}
 
 function runit()
@@ -28,43 +49,36 @@ function runit()
 
   function connect() {
 
+		// Grab the streamdata key
 		var $streamdataKey = document.getElementById("streamdataKey").value;
-		console.log("streamdata key: " + $streamdataKey);
 
+		// grab the newsAPI key
 		var $newsAPIKey = document.getElementById("newsAPIKey").value;
-		console.log("newsapi key: " + $newsAPIKey);
 
+		// Set the URL
 		var $api_url = 'http://newsapi.org/v2/top-headlines';
-		console.log("newsapi url: " + $api_url);
 
     // create the StreamdataEventSource Object
     eventSource = streamdataio.createEventSource($api_url, $streamdataKey);
-
     eventSource
      .onOpen(function() {
        console.log("streamdata Event Source connected.")
      })
      .onData(function(data) {
-
-	   processResults(data);
-
+			 	// process results
+	   		processResults(data);
      })
      .onPatch(function(patch) {
-
-       // use json patch library to apply the patch (patch)
-       // to the original snapshot (stocks)
-       console.log("udate!");
        	results = patch.events;
+				// process results
 				processResults(results);
      })
      .onError(function(error) {
        // displays the error message
        console.log(error.getMessage());
      });
-
     // open the data stream to the REST service through streamdata.io proxy
     eventSource.open();
-
   };
 
   function disconnect() {
