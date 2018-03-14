@@ -18,14 +18,13 @@ function processResults(results)
 
 		$token = 'Authorization: token ' + $github_token;
 
+		$headers = [token,'User-Agent: Streaam-To-github'];
+
 		$githuburl = 'https://api.github.com/repos/' + $github_owner + '/' + $github_repo + '/contents/' + $file_name;
 		var response = $.ajax({
 		     url: $githuburl,
 		     method: "get",
-		     headers: {
-					 $token,
-	 				 'User-Agent: Streaam-To-github'
-		     },
+		     headers: $headers,
 		     success:function(response){
 		          console.log("success!");
 							console.log(response);
